@@ -1,0 +1,6 @@
+// for tables
+
+open phpmyadmin
+go to import tab
+upload the mysql_tables.sql file
+

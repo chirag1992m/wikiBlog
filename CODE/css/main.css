@@ -1,0 +1,383 @@
+@CHARSET "UTF-8";
+
+/* Common */
+body {
+	background: #EFEFEF;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+header {
+	padding: 5px;
+	background: #AAA;
+	box-shadow: 0px 0px 22px #777;
+	border-bottom: 1px solid #777;
+}
+#header > div {
+	display: inline-block;
+}
+
+.wrapper {
+	width: 1100px;
+	margin: auto;
+}
+
+#logo {
+	padding: 0px 20px;
+}
+#logo h1 a,#logo h1 a:HOVER,#logo h1 a:VISITED,#logo h1 a:LINK,#logo h1 a:FOCUS {
+	color: #000;
+}
+
+#searchForm {
+	margin-left: 50px;
+	width: 650px;
+}
+
+#searchBox {
+	width: 550px;
+	padding: 5px 10px;
+	border-radius: 5px 0px 0px 5px;
+	border: none;
+}
+
+#searchBox {
+	margin-right: 0px;
+}
+
+#searchForm input[type="submit"] {
+	padding: 5px 10px;
+	border-radius: 0px 5px 5px 0px;
+	border: none;
+	margin: 0px;
+	background-color: #5FBFFF;
+	font-weight: 900;
+}
+
+#content {
+	margin-top: 20px;
+}
+
+/* About in home page */
+#wikiblog_about {
+	width: 650px;
+	display: inline-block;
+	padding: 10px;
+	border-right: 1px solid #777;
+}
+#wikiblog_about ul{
+	list-style: disc;
+	padding: 0px 25px;
+}
+#wikiblog_about ul li {
+	margin: 10px 0px;
+}
+
+
+/* Login box */
+#login_box {
+	width: 350px;
+	padding: 10px;
+	border: 1px solid #777;
+	box-shadow: 0px 0px 22px #777;
+	display: inline-block;
+	background: #AAA;
+}
+#login_box div {
+	margin: 10px 5px;
+}
+#login_box div h1 {
+	float: right;
+	font-weight: 900;
+	font-size: 20px;
+}
+#login_box input {
+	width: 300px;
+	padding: 8px 20px;
+	border: none;
+}
+#login_box input[type="submit"] {
+	width: auto;
+	padding: 5px 10px;
+	border: none;
+	margin: 0px;
+	background-color: #5FBFFF;
+	font-weight: 900;
+}
+
+/* Registration Page */
+table {
+	width: 100%;
+}
+#reg_form table tr td:nth-child(1) {
+	text-align: right;
+}
+#reg_form table tr td span {
+	font-size: 75%;
+	color: #777;
+}
+#reg_form table tr td{
+	padding: 10px 5px;
+}
+#reg_form table tr td input {
+	width: 300px;
+	padding: 8px 20px;
+	border: 1px solid #777;
+	box-shadow: 0px 0px 10px #777;
+}
+#reg_form table tr td input:invalid {
+	border: 2px solid red;
+}
+#reg_form table tr td input:valid {
+	border: 2px solid #99FF66;
+}
+#reg_form table tr td textarea {
+	width: 300px;
+	padding: 8px 20px;
+	border: 1px solid #777;
+	box-shadow: 0px 0px 10px #777;
+}
+#reg_form table tr td textarea:invalid {
+	border: 2px solid red;
+}
+#reg_form table tr td textarea:valid {
+	border: 2px solid #99FF66;
+}
+#reg_form table tr td input[type="submit"] {
+	width: auto;
+	padding: 5px 10px;
+	border: none;
+	margin: 0px;
+	background-color: #5FBFFF;
+	font-weight: 900;
+}
+
+/* Form error and success */
+.success {
+	color: green;
+	text-align: center;
+}
+.error {
+	color: red;
+	text-align: center;
+}
+.small {
+	font-size: 75%;
+	text-align: left;
+}
+.big {
+	font-size: 150%;	
+}
+
+/* logout button */
+span.logout {
+	font-size: 80%;
+}
+
+/* profile page */
+.profile_functions {
+	display: inline-block;
+}
+.profile_functions > div {
+	margin: 10px 0px;
+	text-align: center;
+}
+.big_pic {
+	width: 296px;
+	height: 296px;
+	border: 2px #777 solid;
+	box-shadow: 0px 0px 10px #666;
+}
+.profile_details {
+	display: inline-block;
+	width: 750px;
+	padding: 10px;
+	border-left: 1px solid #777;
+	vertical-align: top;
+	margin-left: 20px;
+}
+.profile_details table tr td:nth-child(1){
+	font-size: 110%;
+	font-weight: bold;
+}
+.profile_details table tr td{
+	padding: 15px 5px;
+}
+
+/* news feed */
+#news_feed {
+	margin: 20px 0px;
+	padding: 0px 10px;
+	border-top: 1px solid #777;
+	width: 100%;
+}
+
+/* button */
+button {
+	padding: 5px 10px;
+	border: none;
+	margin: 0px;
+	background-color: #5FBFFF;
+	font-weight: 900;
+	box-shadow: 0px 0px 3px #000;
+}
+button:active {
+	box-shadow: 0px 0px 3px #000 inset;
+}
+
+/* User's list */
+#users_list {
+	margin:20px 10px;
+}
+#users_list > div {
+	border: 2px #777 solid;
+	box-shadow: 0px 0px 10px #666;
+	margin: 10px;
+}
+.thumbnail_pic {
+	width: 100px;
+	height: 100px;
+	border: 2px #777 solid;
+	box-shadow: 0px 0px 10px #666;
+	margin: 10px;
+}
+#users_list > div > div {
+	display: inline-block;
+}
+
+/* Writes list */
+#writes_list {
+	margin:20px 10px;
+}
+#writes_list > div {
+	border: 2px #777 solid;
+	box-shadow: 0px 0px 10px #666;
+	margin: 10px;
+	padding: 10px;
+}
+#writes_list > div h1 {
+	font-size: 125%;
+}
+#writes_list > div > div {
+	margin: 3px;
+}
+
+/* Post division */
+#post {
+	margin: 10px;
+	padding: 10px;	
+}
+#post > div {
+	margin: 10px;
+}
+#post > h1{
+	font-size: 200%;
+	font-weight: 900;
+	text-align: center;
+}
+#post div.writer {
+	vertical-align: bottom;
+	font-size: 90%;
+	color: #777;
+	line-height: 130%;
+}
+#post div.text {
+	padding: 15px;
+	border: 1px solid #777;
+	box-shadow: 0px 0px 10px #666;
+}
+#post div.like_summary > div, #post div#like_button > div {
+	display: inline-block;
+	margin: 8px 15px;
+}
+#post div.comments {
+	border-top: 1px solid #777;
+	padding: 15px;
+}
+
+/* Article Division */
+#article {
+	margin: 10px;
+	padding: 10px;	
+}
+#article > div {
+	margin: 15px;
+}
+#article > h1{
+	font-size: 200%;
+	font-weight: 900;
+	text-align: center;
+}
+#article div.writer {
+	vertical-align: bottom;
+	font-size: 90%;
+	color: #777;
+	line-height: 130%;
+}
+#article div.text {
+	padding: 15px;
+	border: 1px solid #777;
+	box-shadow: 0px 0px 10px #666;
+}
+#article div.ratings > div form {
+	margin: 10px 0px;
+	display: inline-block;
+}
+#article div.version_summary span{
+	text-align: center;
+	font-size: 125%;
+	font-weight: 900;
+}
+#article div.version_summary ul {
+	list-style: disc;
+	margin: 15px 10px 15px 30px;
+}
+#article div.version_summary ul li, #article div.version_summary ul li a{
+	vertical-align: top;
+	margin: 10px 0px;
+	font-size: 110%;
+}
+
+/* comments section */
+.comments ul {
+	margin: 15px 0px 15px 30px;
+}
+.comments ul li {
+	border-top: 1px solid #777;
+	padding: 5px 0px 5px 5px;
+}
+.comments img {
+	float: left;
+	width: 45px;
+	height: 45px;
+	border: 1px solid #777;
+	margin-right: 5px;
+}
+.comments ul li span {
+	font-size: 80%;
+	color: #777;
+}
+.comments div.comment_text {
+	margin: 5px 0px;
+}
+
+.comments input {
+	width: 300px;
+	padding: 8px 20px;
+	border: 1px solid #777;
+	box-shadow: 0px 0px 10px #777;
+}
+.comments input:invalid {
+	border: 2px solid red;
+}
+.comments input:valid {
+	border: 2px solid #99FF66;
+}
+.comments input[type="submit"] {
+	width: auto;
+	padding: 5px 10px;
+	border: none;
+	margin: 0px;
+	margin-left: 15px;
+	background-color: #5FBFFF;
+	font-weight: 900;
+}

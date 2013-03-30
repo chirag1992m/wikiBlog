@@ -1,0 +1,12 @@
+@CHARSET "UTF-8";
+
+.stars {
+	display: inline-block;
+}
+
+.stars.normal {
+	background: url('../img/star_normal.png') repeat-x top left;
+}
+.stars.normal .filling {
+	background:url('../img/star_normal.png') repeat-x 0 -20px;
+}

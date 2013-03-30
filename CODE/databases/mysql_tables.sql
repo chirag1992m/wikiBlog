@@ -19,9 +19,9 @@
 -- Current Database: `mchirag_wikiblog`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `mchirag_wikiblog` /*!40100 DEFAULT CHARACTER SET latin1 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `wikiblog` /*!40100 DEFAULT CHARACTER SET latin1 */;
 
-USE `mchirag_wikiblog`;
+USE `wikiblog`;
 
 --
 -- Table structure for table `activeUsers`
@@ -31,11 +31,12 @@ DROP TABLE IF EXISTS `activeUsers`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `activeUsers` (
-  `userID` int(5) NOT NULL,
   `randomString` char(10) NOT NULL,
-  `ip` char(15) DEFAULT NULL,
+  `userID` int(5) NOT NULL,
+  `ip` varchar(15) DEFAULT NULL,
   `loggedInAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`userID`,`randomString`),
+  PRIMARY KEY (`randomString`,`userID`),
+  KEY `userID` (`userID`),
   CONSTRAINT `activeUsers_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -51,6 +52,7 @@ CREATE TABLE `article` (
   `articleID` int(5) NOT NULL AUTO_INCREMENT,
   `articleFilePath` varchar(100) NOT NULL,
   `lastModified` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `articleName` varchar(100) NOT NULL DEFAULT 'new article',
   PRIMARY KEY (`articleID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -72,6 +74,25 @@ CREATE TABLE `articleKeyword` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `articleRating`
+--
+
+DROP TABLE IF EXISTS `articleRating`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `articleRating` (
+  `userID` int(5) NOT NULL,
+  `articleID` int(5) NOT NULL,
+  `version` int(3) NOT NULL,
+  `rating` int(1) NOT NULL,
+  PRIMARY KEY (`userID`,`articleID`,`version`),
+  KEY `articleID` (`articleID`,`version`),
+  CONSTRAINT `articleRating_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `articleRating_ibfk_2` FOREIGN KEY (`articleID`, `version`) REFERENCES `writesArticle` (`articleID`, `version`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `articleTag`
 --
 
@@ -81,57 +102,9 @@ DROP TABLE IF EXISTS `articleTag`;
 CREATE TABLE `articleTag` (
   `articleID` int(5) NOT NULL,
   `tag` varchar(100) NOT NULL,
+  `url` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`articleID`,`tag`),
   CONSTRAINT `articleTag_ibfk_1` FOREIGN KEY (`articleID`) REFERENCES `article` (`articleID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `blog`
---
-
-DROP TABLE IF EXISTS `blog`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `blog` (
-  `blogID` int(5) NOT NULL AUTO_INCREMENT,
-  `userID` int(5) NOT NULL,
-  `blogFilePath` varchar(100) NOT NULL,
-  `writtenAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`blogID`),
-  KEY `user_ind` (`userID`) USING BTREE,
-  CONSTRAINT `blog_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `blogKeyword`
---
-
-DROP TABLE IF EXISTS `blogKeyword`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `blogKeyword` (
-  `blogID` int(5) NOT NULL,
-  `keyword` varchar(100) NOT NULL,
-  `occurences` int(2) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`blogID`,`keyword`),
-  CONSTRAINT `blogKeyword_ibfk_1` FOREIGN KEY (`blogID`) REFERENCES `blog` (`blogID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `blogTag`
---
-
-DROP TABLE IF EXISTS `blogTag`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `blogTag` (
-  `blogID` int(5) NOT NULL,
-  `tag` varchar(100) NOT NULL,
-  PRIMARY KEY (`blogID`,`tag`),
-  CONSTRAINT `blogTag_ibfk_1` FOREIGN KEY (`blogID`) REFERENCES `blog` (`blogID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -143,16 +116,35 @@ DROP TABLE IF EXISTS `comment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `comment` (
-  `commentID` int(3) NOT NULL,
-  `blogID` int(5) NOT NULL,
+  `commentID` int(4) NOT NULL,
+  `postID` int(5) NOT NULL,
   `userID` int(5) NOT NULL,
   `comment` text NOT NULL,
   `writtenAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`commentID`,`blogID`),
-  KEY `user_ind` (`userID`) USING BTREE,
-  KEY `blogID` (`blogID`),
+  PRIMARY KEY (`commentID`,`postID`),
+  KEY `userid_index` (`userID`) USING BTREE,
+  KEY `postID` (`postID`),
   CONSTRAINT `comment_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `comment_ibfk_2` FOREIGN KEY (`blogID`) REFERENCES `blog` (`blogID`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `comment_ibfk_2` FOREIGN KEY (`postID`) REFERENCES `post` (`postID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `commentThread`
+--
+
+DROP TABLE IF EXISTS `commentThread`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `commentThread` (
+  `childID` int(4) NOT NULL,
+  `parentID` int(4) NOT NULL,
+  `postID` int(5) NOT NULL,
+  PRIMARY KEY (`childID`,`parentID`,`postID`),
+  KEY `childID` (`childID`,`postID`),
+  KEY `parentID` (`parentID`,`postID`),
+  CONSTRAINT `commentThread_ibfk_1` FOREIGN KEY (`childID`, `postID`) REFERENCES `comment` (`commentID`, `postID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `commentThread_ibfk_2` FOREIGN KEY (`parentID`, `postID`) REFERENCES `comment` (`commentID`, `postID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -189,42 +181,70 @@ CREATE TABLE `interests` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `likes_dislikes`
+-- Table structure for table `likesDislikes`
 --
 
-DROP TABLE IF EXISTS `likes_dislikes`;
+DROP TABLE IF EXISTS `likesDislikes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `likes_dislikes` (
+CREATE TABLE `likesDislikes` (
   `userID` int(5) NOT NULL,
-  `blogID` int(5) NOT NULL,
+  `postID` int(5) NOT NULL,
   `choice` tinyint(1) NOT NULL,
-  PRIMARY KEY (`userID`,`blogID`),
-  KEY `blogID` (`blogID`),
-  CONSTRAINT `likes_dislikes_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `likes_dislikes_ibfk_2` FOREIGN KEY (`blogID`) REFERENCES `blog` (`blogID`) ON DELETE CASCADE ON UPDATE CASCADE
+  PRIMARY KEY (`userID`,`postID`),
+  KEY `postID` (`postID`),
+  CONSTRAINT `likesDislikes_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `likesDislikes_ibfk_2` FOREIGN KEY (`postID`) REFERENCES `post` (`postID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `reply`
+-- Table structure for table `post`
 --
 
-DROP TABLE IF EXISTS `reply`;
+DROP TABLE IF EXISTS `post`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `reply` (
-  `replyID` int(2) NOT NULL,
-  `commentID` int(3) NOT NULL,
-  `blogID` int(5) NOT NULL,
+CREATE TABLE `post` (
   `userID` int(5) NOT NULL,
-  `reply` text NOT NULL,
+  `postID` int(5) NOT NULL AUTO_INCREMENT,
+  `postFilePath` varchar(100) NOT NULL,
   `writtenAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`replyID`,`commentID`,`blogID`),
-  KEY `user_ind` (`userID`) USING BTREE,
-  KEY `commentID` (`commentID`,`blogID`),
-  CONSTRAINT `reply_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `reply_ibfk_2` FOREIGN KEY (`commentID`, `blogID`) REFERENCES `comment` (`commentID`, `blogID`) ON DELETE CASCADE ON UPDATE CASCADE
+  `postName` varchar(100) NOT NULL DEFAULT 'new post',
+  PRIMARY KEY (`postID`),
+  KEY `userid_index` (`userID`) USING BTREE,
+  CONSTRAINT `post_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `postKeyword`
+--
+
+DROP TABLE IF EXISTS `postKeyword`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `postKeyword` (
+  `postID` int(5) NOT NULL,
+  `keyword` varchar(100) NOT NULL,
+  `occurences` int(2) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`postID`,`keyword`),
+  CONSTRAINT `postKeyword_ibfk_1` FOREIGN KEY (`postID`) REFERENCES `post` (`postID`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `postTag`
+--
+
+DROP TABLE IF EXISTS `postTag`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `postTag` (
+  `postID` int(5) NOT NULL,
+  `tag` varchar(100) NOT NULL,
+  PRIMARY KEY (`postID`,`tag`),
+  CONSTRAINT `postTag_ibfk_1` FOREIGN KEY (`postID`) REFERENCES `post` (`postID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -239,15 +259,15 @@ CREATE TABLE `user` (
   `userID` int(5) NOT NULL AUTO_INCREMENT,
   `username` varchar(30) NOT NULL,
   `firstName` varchar(30) NOT NULL,
-  `lastName` varchar(30) NOT NULL,
-  `emailID` varchar(100) NOT NULL,
+  `lastName` varchar(30) DEFAULT NULL,
+  `emailID` varchar(50) NOT NULL,
   `password` varchar(165) NOT NULL,
-  `profilePicPath` varchar(100) DEFAULT NULL,
+  `profilePicUrl` varchar(100) DEFAULT NULL,
   `aboutMe` text,
   PRIMARY KEY (`userID`),
-  UNIQUE KEY `username_uk` (`username`),
-  UNIQUE KEY `email_uk` (`emailID`),
-  KEY `username_ind` (`username`) USING BTREE
+  UNIQUE KEY `username` (`username`),
+  UNIQUE KEY `emailID` (`emailID`),
+  KEY `username_index` (`username`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -260,14 +280,14 @@ DROP TABLE IF EXISTS `writesArticle`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `writesArticle` (
   `userID` int(5) NOT NULL,
-  `articleId` int(5) NOT NULL,
+  `articleID` int(5) NOT NULL,
   `version` int(3) NOT NULL,
   `articleFilePath` varchar(100) NOT NULL,
   `writtenAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`userID`,`articleId`,`version`),
-  KEY `articleId` (`articleId`),
+  PRIMARY KEY (`articleID`,`version`),
+  KEY `userid_index` (`userID`) USING BTREE,
   CONSTRAINT `writesArticle_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `user` (`userID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `writesArticle_ibfk_2` FOREIGN KEY (`articleId`) REFERENCES `article` (`articleID`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `writesArticle_ibfk_2` FOREIGN KEY (`articleID`) REFERENCES `article` (`articleID`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -280,4 +300,4 @@ CREATE TABLE `writesArticle` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-03-11  3:58:31
+-- Dump completed on 2013-03-23 22:57:45
