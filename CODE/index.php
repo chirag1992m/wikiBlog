@@ -6,6 +6,12 @@ ob_start();
 		header("location: profile.php?username=".$session->username);
 	}
 ob_flush();
+include_once('entities/article.php');
+include_once('entities/blogpost.php');
+$article = new Article($user->getDatabaseClient());
+$post = new BlogPost($user->getDatabaseClient());
+$all_articles = $article->getLatestArticles(3);
+$all_blogs = $post->getLatestPosts(3);
 ?>
 
 <!DOCTYPE html>
@@ -41,7 +47,7 @@ ob_flush();
 	<div id="content">
 		<div class="wrapper">
 			<div id="wikiblog_about">
-				It is a blog and article writing/viewing web-application for users.<br/><br/>
+				<!-- It is a blog and article writing/viewing web-application for users.<br/><br/>
 				Its features include:<br/>
 				<ul>
 					<li>Every writer will have a separate user account identified by a unique username.</li>
@@ -64,9 +70,67 @@ ob_flush();
 						</ul>
 					</li>
 					<li>A user can rate an article out of 5.</li>
-				</ul>
+				</ul> -->
+				<h1 style="font-size:150%; font-weight: 900;">Newly Added Articles:</h1>
+				<div id="writes_list">
+					<?php
+						if(is_null($all_articles)) {
+					?>
+					<div class="error big">
+						Sorry, No new articles found.
+					</div>
+					<?php
+						} else {
+					?>
+					<?php
+					foreach ($all_articles as $key => $value) {
+					?>
+						<div>
+							<h1><a href="article?id=<?php echo $value['id']; ?>"><?php echo $value['name']; ?></a><span style="font-size: 60%; color: #666; vertical-align: bottom;">&nbsp;&nbsp;&nbsp; Written at: <?php echo $value['time']; ?></span></h1>
+							<div style="text-align: right;">
+								<?php
+									echo substr(strip_tags($value['text']), 0, 100)."...";
+								?>
+							</div>
+						</div>
+					<?php
+					}
+				?>
+					<?php
+						}
+					?>
+				</div>
+				<h1 style="font-size:150%; font-weight: 900;">Newly Added blog Posts:</h1>
+				<div id="writes_list">
+					<?php
+						if(is_null($all_blogs)) {
+					?>
+					<div class="error big">
+						Sorry, No new blog posts found.
+					</div>
+					<?php
+						} else {
+					?>
+					<?php
+					foreach ($all_blogs as $key => $value) {
+					?>
+						<div style="overflow: hidden;">
+							<h1><a href="post?id=<?php echo $value['id']; ?>"><?php echo $value['name']; ?></a><span style="font-size: 60%; color: #666; vertical-align: bottom;">&nbsp;&nbsp;&nbsp; Written at: <?php echo $value['time']; ?></span></h1>
+							<div style="text-align: right;">
+								<?php
+									echo substr(strip_tags($value['text']), 0, 100)."...";
+								?>
+							</div>
+						</div>
+					<?php
+					}
+				?>
+					<?php
+						}
+					?>
+				</div>
 			</div>
-			<div id="login_box">
+			<div id="login_box" style="vertical-align: top;">
 				<?php
 					if(isset($_SESSION['success_registration'])) {
 						if($_SESSION['success_registration'] == true) {

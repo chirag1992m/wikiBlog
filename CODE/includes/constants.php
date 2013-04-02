@@ -12,7 +12,7 @@ class DATABASE_CONST {
 	const USER = "mchirag";
 	static $DATABASE = "mchirag_wikiblog";
 	static $HOST = "localhost";
-	static $PASS = "asauca";
+	static $PASS = "";
 	
 	public function getUser() {
 		return self::USER;
@@ -34,6 +34,6 @@ $Database_const = new DATABASE_CONST;
 ?>
 
 <?php
-	define("USERDATA", "/var/www/others/wikiblog_code/userdata/");
-	define("PROFILE_PATH", "http://10.11.0.41/others/wikiblog_code/userdata/");
+	define("USERDATA", "");
+	define("PROFILE_PATH", "");
 ?>

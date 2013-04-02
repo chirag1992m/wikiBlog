@@ -27,6 +27,8 @@ class BlogPost {
 	const QUERY_SEARCH_TAGS = "SELECT postID FROM postTag WHERE tag LIKE ?";
 	const QUERY_SEARCH_KEYWORDS = "SELECT postID FROM postKeyword WHERE keyword LIKE ? ORDER BY occurences DESC";
 
+	const QUERY_GET_LATEST_POSTS = "SELECT postID, postText, postName, writtenAt FROM post ORDER BY writtenAt DESC LIMIT ?";
+
 	function __construct($client) {
 		if(is_null($client)) {
 			global $Database_const;
@@ -224,6 +226,26 @@ class BlogPost {
 		}
 
 		return $ids;
+	}
+
+	function getLatestPosts($limit) {
+		if(!$this->dbclient->prepare(self::QUERY_GET_LATEST_POSTS)) {
+			die("Error in QUERY_GET_LATEST_POSTS, ".$this->dbclient->getLastError());
+		} else {
+			$this->dbclient->current_stmt->bind_param('i', $limit);
+			if($this->dbclient->current_stmt->execute()) {
+				$data = array();
+				$this->dbclient->current_stmt->bind_result($id, $text, $name, $time);
+
+				while($this->dbclient->current_stmt->fetch()) {
+					array_push($data, array('id' => $id, 'text'=>$text, 'name'=>$name, 'time'=>$time));
+				}
+
+				return $data;
+			} else {
+				return null;
+			}
+		}
 	}
 };
 ?>

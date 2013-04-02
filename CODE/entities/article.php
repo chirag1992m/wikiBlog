@@ -41,6 +41,8 @@ class Article {
 	const QUERY_SEARCH_TAGS = "SELECT articleID FROM articleTag WHERE tag LIKE ?";
 	const QUERY_SEARCH_KEYWORDS = "SELECT articleID FROM articleKeyword WHERE keyword LIKE ? ORDER BY occurences DESC";
 
+	const QUERY_GET_LATEST_ARTICLES = "SELECT articleID, articleText, articleName, lastModified FROM article ORDER BY lastModified DESC LIMIT ?";
+
 	function __construct($client) {
 		if(is_null($client)) {
 			global $Database_const;
@@ -472,6 +474,26 @@ class Article {
 		}
 
 		return $ids;
+	}
+
+	function getLatestArticles($limit) {
+		if(!$this->dbclient->prepare(self::QUERY_GET_LATEST_ARTICLES)) {
+			die("Error in QUERY_GET_LATEST_ARTICLES, ".$this->dbclient->getLastError());
+		} else {
+			$this->dbclient->current_stmt->bind_param('i', $limit);
+			if($this->dbclient->current_stmt->execute()) {
+				$data = array();
+				$this->dbclient->current_stmt->bind_result($articleid, $article, $name, $time);
+
+				while($this->dbclient->current_stmt->fetch()) {
+					array_push($data, array('id' => $articleid, 'text'=>$article, 'name'=>$name, 'time'=>$time));
+				}
+
+				return $data;
+			} else {
+				return null;
+			}
+		}
 	}
 };
 ?>

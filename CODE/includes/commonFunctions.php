@@ -116,7 +116,7 @@ class CommonFunctions {
     }
 
     function strip_simple_words($word) {
-        $words = array("a", "this", "is", "or", "and", "an", "the", "with");
+        $words = array("a", "this", "is", "or", "and", "an", "the", "with", "at", "are", "as", "by", "be");
 
         if(in_array($word, $words)) {
             $word = '';
