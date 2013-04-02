@@ -37,8 +37,8 @@ class Comments {
 
 	const QUERY_COMMENT_COUNT = "SELECT count(*) FROM comment WHERE postID = ?";
 
-	const QUERY_GET_ROOT_COMMENTS = "SELECT userID, comment, writtenAt, commentID FROM comment C WHERE postID = ? AND NOT EXISTS (SELECT * FROM commentThread CT WHERE CT.childID = C.commentID) ORDER BY writtenAt";
-	const QUERY_GET_CHILDREN = "SELECT userID, comment, writtenAt, commentID FROM comment C WHERE commentID IN (SELECT childID FROM commentThread WHERE parentID = ? AND postID = ?)  ORDER BY writtenAt";
+	const QUERY_GET_ROOT_COMMENTS = "SELECT userID, comment, writtenAt, commentID FROM comment C WHERE postID = ? AND NOT EXISTS (SELECT * FROM commentThread CT WHERE CT.childID = C.commentID && CT.postID = C.postID) ORDER BY writtenAt";
+	const QUERY_GET_CHILDREN = "SELECT userID, comment, writtenAt, commentID FROM comment C WHERE commentID IN (SELECT childID FROM commentThread WHERE parentID = ? AND postID = ?) AND postID = ? ORDER BY writtenAt";
 	const QUERY_GET_MAXID = "SELECT max(commentID) FROM comment WHERE postID = ?";
 
 	const QUERY_ADD_COMMENT = "INSERT INTO comment(commentID, postID, userID, comment) VALUES (?, ?, ?, ?)";
@@ -80,7 +80,7 @@ class Comments {
 		if(!$this->dbclient->prepare(self::QUERY_GET_CHILDREN)) {
 			die("Error in QUERY_GET_CHILDREN, ".$this->dbclient->getLastError());
 		} else {
-			$this->dbclient->current_stmt->bind_param('ii', $commentid, $postid);
+			$this->dbclient->current_stmt->bind_param('iii', $commentid, $postid, $postid);
 
 			if($this->dbclient->current_stmt->execute()) {
 				$this->dbclient->current_stmt->bind_result($userid, $text, $time, $commentid);
