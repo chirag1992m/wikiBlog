@@ -9,8 +9,8 @@
 	Database Connection
 */
 class DATABASE_CONST {
-	const USER = "mchirag";
-	static $DATABASE = "mchirag_wikiblog";
+	const USER = "";
+	static $DATABASE = "wikiblog";
 	static $HOST = "localhost";
 	static $PASS = "";
 	

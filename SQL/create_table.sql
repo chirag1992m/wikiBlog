@@ -19,9 +19,9 @@
 -- Current Database: `mchirag_wikiblog`
 --
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `mchirag_wikiblog` /*!40100 DEFAULT CHARACTER SET latin1 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `wikiblog` /*!40100 DEFAULT CHARACTER SET latin1 */;
 
-USE `mchirag_wikiblog`;
+USE `wikiblog`;
 
 --
 -- Table structure for table `activeUsers`
