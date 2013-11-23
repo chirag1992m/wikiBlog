@@ -64,9 +64,16 @@ class CommonFunctions {
         if($profilepic == "" || strlen($profilepic) == 0)
             return "\"userdata/default_profile_pic.jpg\"";
         else {
+            /*$filename = end(explode("/", $profilepic));
+            if(PROFILE_PATH != "") {
+                $file = PROFILE_PATH.$username."/".$filename;
+            } else {
+                $file = "userdata/".$username."/".$filename;
+            }
+            return "\"".$file."\"";*/
             $filename = end(explode("/", $profilepic));
-            $file = PROFILE_PATH.$username."/".$filename;
-
+            $file = USERDATA.$filename;
+            
             return "\"".$file."\"";
         }
     }

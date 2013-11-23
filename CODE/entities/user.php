@@ -33,7 +33,7 @@ class User {
 
 	const QUERY_DROP_INTERESTS = "DELETE from interests WHERE userID = ?";
 
-	const QUERY_SEARCH_USERNAME = "SELECT userID FROM user where username LIKE ?";
+	const QUERY_SEARCH_USERNAME = "SELECT userID FROM user where username LIKE ? or firstName LIKE ? or lastName LIKE ?";
 	const QUERY_SEARCH_INTEREST = "SELECT userID from interests where interest LIKE ?";
 
 	function __construct() {
@@ -310,7 +310,7 @@ class User {
 		if(!$this->dbclient->prepare(self::QUERY_SEARCH_USERNAME)) {
 			die("Error in QUERY_SEARCH_TAGS, ".$this->dbclient->getLastError());
 		} else {
-			$this->dbclient->current_stmt->bind_param('s', $keyword);
+			$this->dbclient->current_stmt->bind_param('sss', $keyword, $keyword, $keyword);
 		}
 
 

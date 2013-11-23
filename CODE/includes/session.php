@@ -268,11 +268,11 @@ class Session {
 
 		/* As the username does not already exist till here, the username is new */
 		// create a directory with name as username in userdata.
-		chdir(USERDATA);
+		/*chdir(USERDATA);
 		if(is_dir(USERDATA.$username)) {
 			rmdir(USERDATA.$username);
 		}
-		mkdir(USERDATA.$username);
+		mkdir(USERDATA.$username);*/
 
 		$field = "profilepic";
 		if(!is_null($photo)) {
@@ -300,8 +300,8 @@ class Session {
 				} else {
 					// save the file in the user directory.
 					$oldpath = $photo['tmp_name'];
-					$newpath = USERDATA.$username."/profilepic.".$extension;
-
+					$newpath = USERDATA."$username.".$extension;
+					chdir("..");
 					if(file_exists($newpath)) {
 						unlink($newpath);
 					}
@@ -464,10 +464,11 @@ class Session {
 			} else {
 				// save the file in the user directory.
 				$oldpath = $photo['tmp_name'];
-				$newpath = USERDATA.$username."/profilepic.".$extension;
+				$newpath = USERDATA.$username.".".$extension;
 				$i = 1;
+				chdir("..");
 				while(file_exists($newpath)) {
-					$newpath = USERDATA.$username."/profilepic_".$i.".".$extension;
+					$newpath = USERDATA.$username."_".$i.".".$extension;
 					$i++;
 				}
 				move_uploaded_file($oldpath, $newpath);

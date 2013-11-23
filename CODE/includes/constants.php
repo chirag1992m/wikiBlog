@@ -9,13 +9,13 @@
 	Database Connection
 */
 class DATABASE_CONST {
-	const USER = "";
+	static $USER = "";
 	static $DATABASE = "wikiblog";
-	static $HOST = "localhost";
+	static $HOST = "";
 	static $PASS = "";
 	
 	public function getUser() {
-		return self::USER;
+		return self::$USER;
 	}
 	
 	public function getDatabase() {
@@ -34,6 +34,6 @@ $Database_const = new DATABASE_CONST;
 ?>
 
 <?php
-	define("USERDATA", "");
-	define("PROFILE_PATH", "");
+	define("USERDATA", "userdata/");
+	define("PROFILE_PATH", "userdata/");
 ?>
